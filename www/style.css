@@ -1,0 +1,31 @@
+table.dataTable thead td {
+    padding: 0px;
+}
+
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 4px;
+    white-space: nowrap;
+	text-align: center;
+}
+
+table.dataTable thead th, table.dataTable thead td {
+    padding: 0px;
+}
+
+.form-control-feedback {
+  width: 20px;
+}
+
+.has-feedback .form-control {
+    padding: 5px;
+}
+
+#shiny-notification-panel {
+  position: fixed;
+  bottom: 50px;
+  left: 300px;
+  background-color: rgba(0,0,0,0);
+  padding: 2px;
+  width: 250px;
+  z-index: 99999;
+}
