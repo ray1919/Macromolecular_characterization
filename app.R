@@ -105,19 +105,23 @@ server <- function(input, output) {
     
     aln_tbl <- reactive({
         if (nrow(raw_tbl()) == 0)
-            return(tibble())
+            return(tibble(seqnames = character(),
+                          start = character(),
+                          end = character(),
+                          width = character()))
         range_lst <- list()
-        for ( i in 1:nrow(raw_tbl())) {
-            withProgress(message = '开始比对数据...',
-                         value = 0,
-                         max = 1, {
-                mp <- matchPattern(raw_tbl()$`Peptide Sequence`[i], ref[[raw_tbl()$Protein[i]]])
-                range_lst[[raw_tbl()$Protein[i]]][[i]] <- GRanges(seqnames = raw_tbl()$Protein[i], ranges = mp@ranges)
+        withProgress(message = '开始比对数据...',
+                     detail = '比对肽段序列：',
+                     value = 0,
+                     max = 1, {
+                         for ( i in 1:nrow(raw_tbl())) {
+                            mp <- matchPattern(raw_tbl()$`Peptide Sequence`[i], ref[[raw_tbl()$Protein[i]]])
+                            range_lst[[raw_tbl()$Protein[i]]][[i]] <- GRanges(seqnames = raw_tbl()$Protein[i], ranges = mp@ranges)
+                        
+                            incProgress(i/nrow(raw_tbl()), i)
+                         }
+        })
             
-                incProgress(i/nrow(raw_tbl()))
-            })
-        }
-        
         ref_rng <- GRanges(seqnames = names(ref),
                            ranges = IRanges(1, width = sapply(ref, nchar)))
         
